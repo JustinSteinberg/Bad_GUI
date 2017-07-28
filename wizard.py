@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 import camera
 
 
-class VarientWizard(QtGui.QWizard):
+class VarientWizard(QtGui.QWizard):                          #Creates all wizard pages
 	def __init__(self, parent = None):
 		super(VarientWizard, self).__init__(parent) 
 		self.addPage(createIntroPage(self))
@@ -14,8 +14,8 @@ class VarientWizard(QtGui.QWizard):
 		self.addPage(createConclusionPage(self))
 		self.setWindowTitle("Apps") 
 		
-class createIntroPage(QtGui.QWizardPage):
-	def __init__(self, parent=None):
+class createIntroPage(QtGui.QWizardPage):                      #Intropage to choose which App you would like to run 
+	def __init__(self, parent=None):			#You can add however many buttons you wish 
 		super(createIntroPage, self).__init__(parent)		
 
 		self.setTitle("Virtual Apt Apps")
@@ -40,18 +40,18 @@ class createIntroPage(QtGui.QWizardPage):
 		self.setLayout(layout)
 		
 
-	def handleButton(self): 
+	def handleButton(self):             #Runs the Pi Camera Code in Camera.py
 		global d
 		d = camera.RunCamera()
 		D_label = QtGui.QLabel(d) 
 		D_label.hide()
 		self.registerField("d", D_label)		
 
-	def minecraft(self): 
+	def minecraft(self):               #Runs the Pi Minecraft Command 
 		execfile('minecraft.py')
 
-class createRegistrationPage(QtGui.QWizardPage): 	
-	def __init__(self, parent = None):
+class createRegistrationPage(QtGui.QWizardPage): 	#Second Page allows you to input your information to recieve your... 
+	def __init__(self, parent = None):		#Picture via email, Does not allow you to go past this page until you fill out the information
 		super(createRegistrationPage, self).__init__(parent)
 	    	self.setTitle("Recieve your photo!")
 	    	self.setSubTitle("Please fill both fields.")
@@ -75,7 +75,7 @@ class createRegistrationPage(QtGui.QWizardPage):
 
 		d = self.field("d").toString()
 
-	def initializePage(self):
+	def initializePage(self):                    #Adds your picture to the page so you can view it
 		self.new_label = QLabel()
 		self.pixmap = QPixmap("/home/pi/PiPictures/Image%s.jpg" % d)
 		self.pixmap_resized = self.pixmap.scaled(350,350,QtCore.Qt.KeepAspectRatio)
@@ -83,7 +83,7 @@ class createRegistrationPage(QtGui.QWizardPage):
 		self.layout.addWidget(self.new_label,12,1)
 		
 	
-class createConclusionPage(QtGui.QWizardPage):
+class createConclusionPage(QtGui.QWizardPage):      #This page just thanks the user and triggers the email to be sent when clicked finish
 	def __init__(self, parent = None):
 		super(createConclusionPage, self).__init__(parent)
 		self.setTitle("We hope you enjoy your lovely photo!")
@@ -98,7 +98,7 @@ class createConclusionPage(QtGui.QWizardPage):
 		self.setLayout(layout)
 		
 
-	def SendMail(self): 
+	def SendMail(self):                     #This is the email function which sends a thank you message and the user's photo
 
 		from email.mime.image import MIMEImage
 		from email.mime.text import MIMEText
@@ -121,7 +121,7 @@ class createConclusionPage(QtGui.QWizardPage):
 		s.ehlo()
 		s.starttls()
 		s.ehlo()
-		s.login('photo@virtualapt.com', 'ForJustin18')
+		s.login('photo@virtualapt.com', 'ForJustin18')      #Sender Email and Password
 		s.sendmail('photo@virtualapt.com', str(emailLineEdit), msg.as_string())
 		s.quit()
 		print "Email Successfully Send" 
